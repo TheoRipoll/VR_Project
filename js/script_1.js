@@ -11,9 +11,11 @@ var x = 3;
 var y = 3;
 var heightWall = x*2;
 
+/*
 // Création d'une caméra en hauteur visant le centre de la scène
 var scene_camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 20, -10), scene);
 scene_camera.setTarget(BABYLON.Vector3.Zero());
+*/
 
 // Création de la caméra en VR
 var camera = new BABYLON.UniversalCamera("vrCam", new BABYLON.Vector3(0, 2.5, 0), scene);
