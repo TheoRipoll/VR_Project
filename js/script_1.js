@@ -84,6 +84,37 @@ wall4.position.y = y;
     wall3.checkCollisions = true;
     wall4.checkCollisions = true;
 
+    //attraper un objet avec la gachette du controller
+    scene.onPointerObservable.add((pointerInfo) => {
+        switch (pointerInfo.type) {
+            case BABYLON.PointerEventTypes.POINTERDOWN:
+                if (pointerInfo.pickInfo.hit && pointerInfo.pickInfo.pickedMesh.isGrabbable) {
+                    pointerInfo.pickInfo.pickedMesh.grabbed = true;
+                    pointerInfo.pickInfo.pickedMesh.physicsImpostor.setMass(0);
+                    pointerInfo.pickInfo.pickedMesh.physicsImpostor.setLinearVelocity(new BABYLON.Vector3(0, 0, 0));
+                    pointerInfo.pickInfo.pickedMesh.physicsImpostor.setAngularVelocity(new BABYLON.Vector3(0, 0, 0));
+                }
+                break;
+            case BABYLON.PointerEventTypes.POINTERUP:
+                if (pointerInfo.pickInfo.pickedMesh && pointerInfo.pickInfo.pickedMesh.grabbed) {
+                    pointerInfo.pickInfo.pickedMesh.grabbed = false;
+                    pointerInfo.pickInfo.pickedMesh.physicsImpostor.setMass(1);
+                }
+                break;
+        }
+    });
+
+    // move object with controller
+    scene.registerBeforeRender(function () {
+        if (sphere.grabbed) {
+            var pick = scene.pick(scene.pointerX, scene.pointerY);
+            sphere.position.x = pick.pickedPoint.x;
+            sphere.position.y = pick.pickedPoint.y;
+            sphere.position.z = pick.pickedPoint.z;
+        }
+    });
+    
+
     // set physics to objects
     sphere.physicsImpostor = new BABYLON.PhysicsImpostor(sphere, BABYLON.PhysicsImpostor.SphereImpostor, {mass: 1, restitution: 0.9}, scene);
     ground.physicsImpostor = new BABYLON.PhysicsImpostor(ground, BABYLON.PhysicsImpostor.BoxImpostor, {mass: 0, restitution: 0.9}, scene);
