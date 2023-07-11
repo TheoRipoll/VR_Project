@@ -6,6 +6,10 @@ var canvas = document.getElementById("renderCanvas");
 var engine = new BABYLON.Engine(canvas, true);
 var scene = new BABYLON.Scene(engine);
 
+var gravityVector = new BABYLON.Vector3(0,-9.81, 0);
+var physicsPlugin = new BABYLON.CannonJSPlugin();
+scene.enablePhysics(gravityVector, physicsPlugin);
+
 // Variables de la scène
 var x = 3;
 var y = 3;
@@ -60,6 +64,34 @@ wall3.position.y = y;
 var wall4 = BABYLON.MeshBuilder.CreateBox("wall4", {width: 0.1, height: heightWall, depth: x*2}, scene);
 wall4.position.x = x;
 wall4.position.y = y;
+
+//OBJECTS//
+
+    // Create a sphere
+    var sphere = BABYLON.MeshBuilder.CreateSphere("sphere", {diameter: 0.5}, scene);
+    sphere.position.y = 1.5;
+    sphere.position.x = 1.5;
+
+
+    // add colilision
+    sphere.checkCollisions = true;
+    sphere.isGrabbable = true;
+    sphere.isPickable = true;
+
+    ground.checkCollisions = true;
+    wall1.checkCollisions = true;
+    wall2.checkCollisions = true;
+    wall3.checkCollisions = true;
+    wall4.checkCollisions = true;
+
+    // set physics to objects
+    sphere.physicsImpostor = new BABYLON.PhysicsImpostor(sphere, BABYLON.PhysicsImpostor.SphereImpostor, {mass: 1, restitution: 0.9}, scene);
+    ground.physicsImpostor = new BABYLON.PhysicsImpostor(ground, BABYLON.PhysicsImpostor.BoxImpostor, {mass: 0, restitution: 0.9}, scene);
+    wall1.physicsImpostor = new BABYLON.PhysicsImpostor(wall1, BABYLON.PhysicsImpostor.BoxImpostor, {mass: 0, restitution: 0.9}, scene);
+    wall2.physicsImpostor = new BABYLON.PhysicsImpostor(wall2, BABYLON.PhysicsImpostor.BoxImpostor, {mass: 0, restitution: 0.9}, scene);
+    wall3.physicsImpostor = new BABYLON.PhysicsImpostor(wall3, BABYLON.PhysicsImpostor.BoxImpostor, {mass: 0, restitution: 0.9}, scene);
+    wall4.physicsImpostor = new BABYLON.PhysicsImpostor(wall4, BABYLON.PhysicsImpostor.BoxImpostor, {mass: 0, restitution: 0.9}, scene);
+
 
 // Lancement de la boucle de rendu
 engine.runRenderLoop(function() {
