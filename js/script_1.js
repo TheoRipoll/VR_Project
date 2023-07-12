@@ -10,6 +10,8 @@ var gravityVector = new BABYLON.Vector3(0,-9.81, 0);
 var physicsPlugin = new BABYLON.CannonJSPlugin();
 scene.enablePhysics(gravityVector, physicsPlugin);
 
+var sound = new BABYLON.Sound("wallSound", "../lib/music/cena_test.mp3", scene);
+
 // Variables de la scène
 var x = 3;
 var y = 3;
@@ -113,7 +115,7 @@ wall4.position.y = y;
             sphere.position.z = pick.pickedPoint.z;
         }
     });
-    
+
 
     // set physics to objects
     sphere.physicsImpostor = new BABYLON.PhysicsImpostor(sphere, BABYLON.PhysicsImpostor.SphereImpostor, {mass: 1, restitution: 0.9}, scene);
@@ -122,6 +124,22 @@ wall4.position.y = y;
     wall2.physicsImpostor = new BABYLON.PhysicsImpostor(wall2, BABYLON.PhysicsImpostor.BoxImpostor, {mass: 0, restitution: 0.9}, scene);
     wall3.physicsImpostor = new BABYLON.PhysicsImpostor(wall3, BABYLON.PhysicsImpostor.BoxImpostor, {mass: 0, restitution: 0.9}, scene);
     wall4.physicsImpostor = new BABYLON.PhysicsImpostor(wall4, BABYLON.PhysicsImpostor.BoxImpostor, {mass: 0, restitution: 0.9}, scene);
+
+
+    // faire jouer un son quand un objet touche un mur
+    sphere.physicsImpostor.registerOnPhysicsCollide(wall1.physicsImpostor, function(main, collided) {
+        sound.play();
+    });
+    sphere.physicsImpostor.registerOnPhysicsCollide(wall2.physicsImpostor, function(main, collided) {
+        sound.play();
+     });
+
+    sphere.physicsImpostor.registerOnPhysicsCollide(wall3.physicsImpostor, function(main, collided) {
+        sound.play();
+    });
+    sphere.physicsImpostor.registerOnPhysicsCollide(wall4.physicsImpostor, function(main, collided) {
+        sound.play();
+    });
 
 
 // Lancement de la boucle de rendu
