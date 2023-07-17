@@ -10,9 +10,19 @@ var gravityVector = new BABYLON.Vector3(0,-9.81, 0);
 var physicsPlugin = new BABYLON.CannonJSPlugin();
 scene.enablePhysics(gravityVector, physicsPlugin);
 
-var cena = new BABYLON.Sound("wallSound", "../lib/music/cena_test.mp3", scene);
 
-var sound = new BABYLON.Sound("wallSound", "../lib/music/sound.mp3", scene);
+var soundDo = new BABYLON.Sound("wallDoSound", "../sound/do.wav", scene);
+var soundRe = new BABYLON.Sound("wallReSound", "../sound/re.wav", scene);
+var soundMi = new BABYLON.Sound("wallMiSound", "../sound/mi.wav", scene);
+var soundFa = new BABYLON.Sound("wallFaSound", "../sound/fa.wav", scene);
+var soundSol = new BABYLON.Sound("wallSolSound", "../sound/sol.wav", scene);
+var soundLa = new BABYLON.Sound("wallLaSound", "../sound/la.wav", scene);
+var soundSi = new BABYLON.Sound("wallSiSound", "../sound/si.wav", scene);
+var soundDo2 = new BABYLON.Sound("wallDoSound", "../sound/do2.wav", scene);
+var soundMi2 = new BABYLON.Sound("wallReSound", "../sound/mi2.wav", scene);
+var soundSol2 = new BABYLON.Sound("wallMiSound", "../sound/sol2.wav", scene);
+var soundSi2 = new BABYLON.Sound("wallFaSound", "../sound/si2.wav", scene);
+var soundLa2 = new BABYLON.Sound("wallSolSound", "../sound/la2.wav", scene);
 
 // Variables de la scène
 var x = 3;
@@ -261,47 +271,45 @@ wallLaSi.position.y = y;
 
 
     sphere.physicsImpostor.registerOnPhysicsCollide(wallRe.physicsImpostor, function(main, collided) {
-        sound.play();
+        soundRe.play();
     });
     sphere.physicsImpostor.registerOnPhysicsCollide(wallMi.physicsImpostor, function(main, collided) {
-        sound.play();
+        soundMi.play();
     });
     sphere.physicsImpostor.registerOnPhysicsCollide(wallFa.physicsImpostor, function(main, collided) {
-        sound.play();
+        soundFa.play();
     });
     sphere.physicsImpostor.registerOnPhysicsCollide(wallSol.physicsImpostor, function(main, collided) {
-        sound.play();
+        soundSol.play();
     });
     sphere.physicsImpostor.registerOnPhysicsCollide(wallLa.physicsImpostor, function(main, collided) {
-        sound.play();
+        soundLa.play();
     });
     sphere.physicsImpostor.registerOnPhysicsCollide(wallSi.physicsImpostor, function(main, collided) {
-        sound.play();
+        soundSi.play();
     });
     sphere.physicsImpostor.registerOnPhysicsCollide(wallDo2.physicsImpostor, function(main, collided) {
-        sound.play();
+        soundDo2.play();
     });
 
     sphere.physicsImpostor.registerOnPhysicsCollide(wallDo.physicsImpostor, function(main, collided) {
-        sound.play();
+        soundDo.play();
     });
 
     sphere.physicsImpostor.registerOnPhysicsCollide(wallMiFa.physicsImpostor, function(main, collided) {
-        sound.play();
+        soundSi.play();
     });
 
-
-
     sphere.physicsImpostor.registerOnPhysicsCollide(wallDoRe.physicsImpostor, function(main, collided) {
-        sound.play();
+        soundLa2.play();
     });
 
     sphere.physicsImpostor.registerOnPhysicsCollide(wallReMi.physicsImpostor, function(main, collided) {
-        sound.play();
+        soundMi2.play();
     });
 
     sphere.physicsImpostor.registerOnPhysicsCollide(wallFaSol.physicsImpostor, function(main, collided) {
-        sound.play();
+        soundSol2.play();
     });
 
 // Lancement de la boucle de rendu
