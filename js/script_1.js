@@ -312,6 +312,190 @@ wallLaSi.position.y = y;
         soundSol2.play();
     });
 
+
+    // créer un cube
+
+    var box = BABYLON.MeshBuilder.CreateBox("box", {height: 1, width: 1, depth: 1}, scene);
+    box.position.y = 0.5;
+    box.position.x = 1.5;
+    box.physicsImpostor = new BABYLON.PhysicsImpostor(box, BABYLON.PhysicsImpostor.BoxImpostor, {mass: 1, restitution: 0.9}, scene);
+    box.checkCollisions = true;
+    box.isGrabbable = true;
+    box.actionManager = new BABYLON.ActionManager(scene); // ajouter un gestionnaire d'événements
+    box.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, function() {
+        box.physicsImpostor.setMass(0); // rendre le cube immobile
+    }));
+
+    var fireRate = 100; // temps entre chaque tir
+    var fireRateCounter = 0; // temps écoulé depuis le dernier tir
+    var sphereSize = 0.2; // taille des sphères
+    var sphereSpeed = 20; // vitesse des sphères
+    var sphereLife = 3; // durée de vie des sphères
+    var sphereColor = new BABYLON.Color3(1, 0, 0); // couleur des sphères
+
+    //tirer des spheres si on appuie sur la gachette d'une manette
+    scene.onBeforeRenderObservable.add(function() {
+        if (fireRateCounter > 0) {
+            fireRateCounter--;
+        }
+        if (fireRateCounter === 0) {
+            if (scene.gamepadManager.gamepads[0]) {
+                if (scene.gamepadManager.gamepads[0].pressedButtons[7]) {
+                    var sphere = BABYLON.MeshBuilder.CreateSphere("sphere", {diameter: sphereSize}, scene);
+                    sphere.position = box.position.clone();
+                    sphere.material = new BABYLON.StandardMaterial("sphereMat", scene);
+                    sphere.material.diffuseColor = sphereColor;
+                    sphere.checkCollisions = true;
+                    sphere.physicsImpostor = new BABYLON.PhysicsImpostor(sphere, BABYLON.PhysicsImpostor.SphereImpostor, {mass: 1, restitution: 0.9}, scene);
+                    var forceDirection = new BABYLON.Vector3(0, 0, 1);
+                    var forceMagnitude = -sphereSpeed;
+                    var contactLocalRefPoint = null;
+                    sphere.physicsImpostor.applyImpulse(forceDirection.scale(forceMagnitude), sphere.getAbsolutePosition().add(contactLocalRefPoint));  
+                    fireRateCounter = fireRate;
+                    setTimeout(function() {
+                        sphere.dispose();
+                    }, sphereLife * 1000);
+                }
+            }
+        }
+    });
+
+
+    //tirer des spheres si on appuie sur la touche espace
+    scene.actionManager = new BABYLON.ActionManager(scene);
+    scene.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnKeyDownTrigger, function(evt) {
+        if (evt.sourceEvent.key === " ") {
+            var sphere = BABYLON.MeshBuilder.CreateSphere("sphere", {diameter: sphereSize}, scene);
+            sphere.position = box.position.clone();
+            sphere.material = new BABYLON.StandardMaterial("sphereMat", scene);
+            sphere.material.diffuseColor = sphereColor;
+            sphere.checkCollisions = true;
+            sphere.physicsImpostor = new BABYLON.PhysicsImpostor(sphere, BABYLON.PhysicsImpostor.SphereImpostor, {mass: 1, restitution: 0.9}, scene);
+            var forceDirection = new BABYLON.Vector3(0, 0, 1);
+            var forceMagnitude = -sphereSpeed + (-sphereSpeed * Math.random());
+
+            sphere.physicsImpostor.applyImpulse(forceDirection.scale(forceMagnitude), sphere.getAbsolutePosition());
+
+            sphere.physicsImpostor.registerOnPhysicsCollide(wallRe.physicsImpostor, function(main, collided) {
+                soundRe.play();
+            });
+            sphere.physicsImpostor.registerOnPhysicsCollide(wallMi.physicsImpostor, function(main, collided) {
+                soundMi.play();
+            });
+            sphere.physicsImpostor.registerOnPhysicsCollide(wallFa.physicsImpostor, function(main, collided) {
+                soundFa.play();
+            });
+            sphere.physicsImpostor.registerOnPhysicsCollide(wallSol.physicsImpostor, function(main, collided) {
+                soundSol.play();
+            });
+            sphere.physicsImpostor.registerOnPhysicsCollide(wallLa.physicsImpostor, function(main, collided) {
+                soundLa.play();
+            });
+            sphere.physicsImpostor.registerOnPhysicsCollide(wallSi.physicsImpostor, function(main, collided) {
+                soundSi.play();
+            });
+            sphere.physicsImpostor.registerOnPhysicsCollide(wallDo2.physicsImpostor, function(main, collided) {
+                soundDo2.play();
+            });
+        
+            sphere.physicsImpostor.registerOnPhysicsCollide(wallDo.physicsImpostor, function(main, collided) {
+                soundDo.play();
+            });
+        
+            sphere.physicsImpostor.registerOnPhysicsCollide(wallMiFa.physicsImpostor, function(main, collided) {
+                soundSi.play();
+            });
+        
+            sphere.physicsImpostor.registerOnPhysicsCollide(wallDoRe.physicsImpostor, function(main, collided) {
+                soundLa2.play();
+            });
+        
+            sphere.physicsImpostor.registerOnPhysicsCollide(wallReMi.physicsImpostor, function(main, collided) {
+                soundMi2.play();
+            });
+        
+            sphere.physicsImpostor.registerOnPhysicsCollide(wallFaSol.physicsImpostor, function(main, collided) {
+                soundSol2.play();
+            });
+
+            
+            sphere.physicsImpostor.applyImpulse(forceDirection.scale(forceMagnitude), sphere.getAbsolutePosition());
+            setTimeout(function() {
+                sphere.dispose();
+            }, sphereLife * 1000);
+        }
+    }));
+
+
+
+/*
+    // tirer des sphères
+    scene.registerBeforeRender(function() {
+        fireRateCounter += scene.getEngine().getDeltaTime();
+        if (fireRateCounter > fireRate) {
+            fireRateCounter = 0;
+            var sphere = BABYLON.MeshBuilder.CreateSphere("sphere", {diameter: sphereSize}, scene);
+            sphere.position = box.position.clone();
+            sphere.material = new BABYLON.StandardMaterial("sphereMat", scene);
+            sphere.material.diffuseColor = sphereColor;
+            sphere.physicsImpostor = new BABYLON.PhysicsImpostor(sphere, BABYLON.PhysicsImpostor.SphereImpostor, {mass: 1, restitution: 0.9}, scene);
+            var forceDirection = new BABYLON.Vector3(0, 0, 1);
+            var forceMagnitude = -sphereSpeed + (-sphereSpeed * Math.random());
+
+            sphere.physicsImpostor.applyImpulse(forceDirection.scale(forceMagnitude), sphere.getAbsolutePosition());
+
+            sphere.physicsImpostor.registerOnPhysicsCollide(wallRe.physicsImpostor, function(main, collided) {
+                soundRe.play();
+            });
+            sphere.physicsImpostor.registerOnPhysicsCollide(wallMi.physicsImpostor, function(main, collided) {
+                soundMi.play();
+            });
+            sphere.physicsImpostor.registerOnPhysicsCollide(wallFa.physicsImpostor, function(main, collided) {
+                soundFa.play();
+            });
+            sphere.physicsImpostor.registerOnPhysicsCollide(wallSol.physicsImpostor, function(main, collided) {
+                soundSol.play();
+            });
+            sphere.physicsImpostor.registerOnPhysicsCollide(wallLa.physicsImpostor, function(main, collided) {
+                soundLa.play();
+            });
+            sphere.physicsImpostor.registerOnPhysicsCollide(wallSi.physicsImpostor, function(main, collided) {
+                soundSi.play();
+            });
+            sphere.physicsImpostor.registerOnPhysicsCollide(wallDo2.physicsImpostor, function(main, collided) {
+                soundDo2.play();
+            });
+        
+            sphere.physicsImpostor.registerOnPhysicsCollide(wallDo.physicsImpostor, function(main, collided) {
+                soundDo.play();
+            });
+        
+            sphere.physicsImpostor.registerOnPhysicsCollide(wallMiFa.physicsImpostor, function(main, collided) {
+                soundSi.play();
+            });
+        
+            sphere.physicsImpostor.registerOnPhysicsCollide(wallDoRe.physicsImpostor, function(main, collided) {
+                soundLa2.play();
+            });
+        
+            sphere.physicsImpostor.registerOnPhysicsCollide(wallReMi.physicsImpostor, function(main, collided) {
+                soundMi2.play();
+            });
+        
+            sphere.physicsImpostor.registerOnPhysicsCollide(wallFaSol.physicsImpostor, function(main, collided) {
+                soundSol2.play();
+            });
+
+            setTimeout(function() {
+                sphere.dispose();
+            }, sphereLife * 1000);
+        }
+    });
+
+*/
+
+
+
 // Lancement de la boucle de rendu
 engine.runRenderLoop(function() {
     scene.render();
